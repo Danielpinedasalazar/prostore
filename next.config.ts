@@ -1,7 +1,18 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Cambia esto:
+  // experimental: {
+  //   serverComponentsExternalPackages: [],
+  // },
 
-const nextConfig: NextConfig = {
-  /* config options here */
+  // Por esto:
+  serverExternalPackages: [],
+
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

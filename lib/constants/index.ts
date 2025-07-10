@@ -4,5 +4,5 @@ export const APP_DESCRIPTION =
   "A modern ecommerce store build with Next.js";
 export const SERVER_UL =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
-export const LATEST_PRODUCT_LIMIT =
-  Number(process.env.LATEST_PRODUCT_LIMIT) || 4;
+export const LATEST_PRODUCTS_LIMIT =
+  Number(process.env.LATEST_PRODUCTS_LIMIT) || 4;
