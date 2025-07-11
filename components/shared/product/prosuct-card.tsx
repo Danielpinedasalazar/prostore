@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import Productprice from "./product-file";
+import Productprice from "./product-price";
 import { Product } from "@/types";
 
 export default function ProductCard({ product }: { product: Product }) {
