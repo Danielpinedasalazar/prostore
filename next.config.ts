@@ -4,7 +4,6 @@ const nextConfig = {
   // experimental: {
   //   serverComponentsExternalPackages: [],
   // },
-
   // Por esto:
   serverExternalPackages: [],
 
