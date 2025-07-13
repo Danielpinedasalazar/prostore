@@ -1,17 +1,15 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  // Cambia esto:
-  // experimental: {
-  //   serverComponentsExternalPackages: [],
-  // },
-  // Por esto:
-  serverExternalPackages: [],
+import type { NextConfig } from "next";
 
-  logging: {
-    fetches: {
-      fullUrl: true,
-    },
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "utfs.io",
+        port: "",
+      },
+    ],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

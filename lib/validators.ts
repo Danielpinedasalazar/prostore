@@ -21,3 +21,54 @@ export const insertProductSchema = z.object({
   banner: z.string().nullable(),
   price: currency,
 });
+
+//Schema for signing users in
+export const signInFormSchema = z.object({
+  email: z.email("Invalid email adress"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+export const signUpFormSchema = z
+  .object({
+    name: z.string().min(3, "Name must be at least 3 characters"),
+    email: z.email("Invalid email adress"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z
+      .string()
+      .min(6, "Confirm password must be at least 6 characters"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Password don't match",
+    path: ["confirmPassword"],
+  });
+
+export const cartItemSchema = z.object({
+  productId: z.string().min(1, "1 item is required"),
+  name: z.string().min(1, "Name is required"),
+  slug: z.string().min(1, "Slug is required"),
+  qty: z.number().int().nonnegative("Quantity must be a positive number"),
+  image: z.string().min(1, "Image item is required"),
+  price: currency,
+});
+
+export const insertCartSchema = z.object({
+  items: z.array(cartItemSchema),
+  itemsPrice: currency,
+  totalPrice: currency,
+  shippingPrice: currency,
+  taxPrice: currency,
+  sessionCartId: z.string().min(1, "Session cart id is required"),
+  userId: z.string().optional().nullable(),
+});
+
+export const shippingAdressSchema = z.object({
+  fullName: z.string().min(3, "Name must be at least three characters"),
+  streetAddress: z
+    .string()
+    .min(3, "Street address must be at least three characters"),
+  city: z.string().min(3, "City must be at least three characters"),
+  postalCode: z.string().min(3, "PostalCode must be at least three characters"),
+  counrty: z.string().min(3, "Country must be at least three characters"),
+  lat: z.number().optional(),
+  lng: z.number().optional(),
+});
