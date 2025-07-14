@@ -8,7 +8,11 @@ export default async function HomePAge() {
       {/*A los productos le pasamos 3 props:
     data: va a tomar todos los productos
     limit: limite de productos a mostrar */}
-      <ProductList data={latestProducts} title="Newest Arrivals" limit={4} />
+      <ProductList
+        data={Array.isArray(latestProducts) ? latestProducts : []}
+        title="Newest Arrivals"
+        limit={4}
+      />
     </>
   );
 }

@@ -5,17 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// Convert prisma object into a regular JS object
+// lib/utils.ts
 export function convertToPlainObject<T>(value: T): T {
-  if (value === null || value === undefined) {
-    return value;
-  }
-
-  try {
-    return JSON.parse(JSON.stringify(value));
-  } catch (error) {
-    console.error("Error converting to plain object:", error);
-    return value;
-  }
+  return JSON.parse(JSON.stringify(value));
 }
 
 // Add this function
