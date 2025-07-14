@@ -1,4 +1,3 @@
-import { Decimal } from "@prisma/client/runtime/library";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -7,28 +6,37 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // Convert prisma object into a regular JS object
+// lib/utils.ts
 export function convertToPlainObject<T>(value: T): T {
   return JSON.parse(
     JSON.stringify(value, (key, val) => {
-      if (val instanceof Decimal) {
-        return val.toNumber();
+      // Handle Prisma Decimal objects
+      if (
+        val &&
+        typeof val === "object" &&
+        val.constructor &&
+        val.constructor.name === "Decimal"
+      ) {
+        return parseFloat(val.toString());
       }
       return val;
     })
   );
 }
 
-// lib/utils.ts
-export function transformProduct(product: any) {
-  return {
-    ...product,
-    price: parseFloat(product.price),
-    rating: parseFloat(product.rating),
-  };
-}
-
+// Or a more specific approach for your products:
 export function transformProducts(products: any[]) {
-  return products.map(transformProduct);
+  return products.map((product) => ({
+    ...product,
+    price:
+      typeof product.price === "string"
+        ? parseFloat(product.price)
+        : product.price,
+    rating:
+      typeof product.rating === "string"
+        ? parseFloat(product.rating)
+        : product.rating,
+  }));
 }
 
 // Format number with decimal places
