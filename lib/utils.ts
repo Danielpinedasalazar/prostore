@@ -8,35 +8,27 @@ export function cn(...inputs: ClassValue[]) {
 // Convert prisma object into a regular JS object
 // lib/utils.ts
 export function convertToPlainObject<T>(value: T): T {
-  return JSON.parse(
-    JSON.stringify(value, (key, val) => {
-      // Handle Prisma Decimal objects
-      if (
-        val &&
-        typeof val === "object" &&
-        val.constructor &&
-        val.constructor.name === "Decimal"
-      ) {
-        return parseFloat(val.toString());
-      }
-      return val;
-    })
-  );
+  return JSON.parse(JSON.stringify(value));
 }
 
-// Or a more specific approach for your products:
-export function transformProducts(products: any[]) {
-  return products.map((product) => ({
+// Add this function
+export function transformProduct(product: any) {
+  return {
     ...product,
     price:
       typeof product.price === "string"
         ? parseFloat(product.price)
-        : product.price,
+        : Number(product.price),
     rating:
       typeof product.rating === "string"
         ? parseFloat(product.rating)
-        : product.rating,
-  }));
+        : Number(product.rating),
+  };
+}
+
+// Add this function too
+export function transformProducts(products: any[]) {
+  return products.map(transformProduct);
 }
 
 // Format number with decimal places
