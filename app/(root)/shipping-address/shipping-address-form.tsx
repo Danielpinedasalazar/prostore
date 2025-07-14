@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useTransition } from "react";
 import { ShippingAddress } from "@/types";
-import { shippingAdressSchema } from "@/lib/validators";
+import { shippingAddressSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ControllerRenderProps, useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
@@ -26,14 +26,14 @@ const ShippingAddressForm = ({ address }: { address: ShippingAddress }) => {
   const router = useRouter();
   const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof shippingAdressSchema>>({
-    resolver: zodResolver(shippingAdressSchema),
+  const form = useForm<z.infer<typeof shippingAddressSchema>>({
+    resolver: zodResolver(shippingAddressSchema),
     defaultValues: address || shippingAddressDefaultValues,
   });
 
   const [isPending, startTransition] = useTransition();
 
-  const onSubmit: SubmitHandler<z.infer<typeof shippingAdressSchema>> = async (
+  const onSubmit: SubmitHandler<z.infer<typeof shippingAddressSchema>> = async (
     values
   ) => {
     startTransition(async () => {
@@ -72,7 +72,7 @@ const ShippingAddressForm = ({ address }: { address: ShippingAddress }) => {
                   field,
                 }: {
                   field: ControllerRenderProps<
-                    z.infer<typeof shippingAdressSchema>,
+                    z.infer<typeof shippingAddressSchema>,
                     "fullName"
                   >;
                 }) => (
@@ -94,7 +94,7 @@ const ShippingAddressForm = ({ address }: { address: ShippingAddress }) => {
                   field,
                 }: {
                   field: ControllerRenderProps<
-                    z.infer<typeof shippingAdressSchema>,
+                    z.infer<typeof shippingAddressSchema>,
                     "streetAddress"
                   >;
                 }) => (
@@ -116,7 +116,7 @@ const ShippingAddressForm = ({ address }: { address: ShippingAddress }) => {
                   field,
                 }: {
                   field: ControllerRenderProps<
-                    z.infer<typeof shippingAdressSchema>,
+                    z.infer<typeof shippingAddressSchema>,
                     "city"
                   >;
                 }) => (
@@ -138,7 +138,7 @@ const ShippingAddressForm = ({ address }: { address: ShippingAddress }) => {
                   field,
                 }: {
                   field: ControllerRenderProps<
-                    z.infer<typeof shippingAdressSchema>,
+                    z.infer<typeof shippingAddressSchema>,
                     "postalCode"
                   >;
                 }) => (
@@ -155,13 +155,13 @@ const ShippingAddressForm = ({ address }: { address: ShippingAddress }) => {
             <div className="flex flex-col md:flex-row gap-5">
               <FormField
                 control={form.control}
-                name="counrty"
+                name="country"
                 render={({
                   field,
                 }: {
                   field: ControllerRenderProps<
-                    z.infer<typeof shippingAdressSchema>,
-                    "counrty"
+                    z.infer<typeof shippingAddressSchema>,
+                    "country"
                   >;
                 }) => (
                   <FormItem className="w-full">

@@ -73,7 +73,7 @@ export default function SignUpForm() {
         <div>
           <SignUpButton />
         </div>
-        {data && !data.success && (
+        {data && !data.success && data.message && (
           <div className="bg-red-100 text-red-600 border border-red-300 rounded-md px-4 py-2 text-sm space-y-1">
             {data.message.split(".").map((msg: string, index: number) =>
               msg.trim() ? (

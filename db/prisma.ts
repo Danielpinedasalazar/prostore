@@ -15,13 +15,72 @@ export const prisma = new PrismaClient({ adapter }).$extends({
     product: {
       price: {
         // Asume que product.price es Decimal y lo convierte a string
-        compute(product: { price: any }) {
+        compute(product) {
           return product.price.toString();
         },
       },
       rating: {
-        compute(product: { rating: any }) {
+        compute(product) {
           return product.rating.toString();
+        },
+      },
+    },
+    cart: {
+      itemsPrice: {
+        needs: { itemsPrice: true },
+        compute(cart) {
+          return cart.itemsPrice.toString();
+        },
+      },
+      shippingPrice: {
+        needs: { shippingPrice: true },
+        compute(cart) {
+          return cart.shippingPrice.toString();
+        },
+      },
+      taxtPrice: {
+        needs: { taxPrice: true },
+        compute(cart) {
+          return cart.taxPrice.toString();
+        },
+      },
+      totalPrice: {
+        needs: { totalPrice: true },
+        compute(cart) {
+          return cart.totalPrice.toString();
+        },
+      },
+    },
+    order: {
+      itemsPrice: {
+        needs: { itemsPrice: true },
+        compute(cart) {
+          return cart.itemsPrice.toString();
+        },
+      },
+      shippingPrice: {
+        needs: { shippingPrice: true },
+        compute(cart) {
+          return cart.shippingPrice.toString();
+        },
+      },
+      taxtPrice: {
+        needs: { taxPrice: true },
+        compute(cart) {
+          return cart.taxPrice.toString();
+        },
+      },
+      totalPrice: {
+        needs: { totalPrice: true },
+        compute(cart) {
+          return cart.totalPrice.toString();
+        },
+      },
+    },
+    orderItem: {
+      price: {
+        compute(cart) {
+          return cart.price.toString();
         },
       },
     },

@@ -1,14 +1,12 @@
 "use client";
-
-import { Cart } from "@/types";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { prisma } from "@/db/prisma";
 import { useTransition } from "react";
 import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.actions";
-import { ArrowBigRight, ArrowRight, Loader, Minus, Plus } from "lucide-react";
-import Image from "next/image";
+import { ArrowRight, Loader, Minus, Plus } from "lucide-react";
+import { Cart, cartItem } from "@/types";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Table,
   TableBody,
@@ -18,13 +16,74 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { formatCurrency } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
-import { Item } from "@radix-ui/react-dropdown-menu";
+import { formatCurrency } from "@/lib/utils";
 
-export default function CartTable({ cart }: { cart: Cart }) {
-  const router = useRouter();
+// NOTE: The code here has changed from the original course code so that the
+// Buttons no longer share the same state and show the loader independently from
+// other items in the cart
+function AddButton({ item }: { item: cartItem }) {
   const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
+  return (
+    <Button
+      disabled={isPending}
+      variant="outline"
+      type="button"
+      onClick={() =>
+        startTransition(async () => {
+          const res = await addItemToCart(item);
+
+          if (!res.success) {
+            toast({
+              variant: "destructive",
+              description: res.message,
+            });
+          }
+        })
+      }
+    >
+      {isPending ? (
+        <Loader className="w-4 h-4 animate-spin" />
+      ) : (
+        <Plus className="w-4 h-4" />
+      )}
+    </Button>
+  );
+}
+
+function RemoveButton({ item }: { item: cartItem }) {
+  const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
+  return (
+    <Button
+      disabled={isPending}
+      variant="outline"
+      type="button"
+      onClick={() =>
+        startTransition(async () => {
+          const res = await removeItemFromCart(item.productId);
+
+          if (!res.success) {
+            toast({
+              variant: "destructive",
+              description: res.message,
+            });
+          }
+        })
+      }
+    >
+      {isPending ? (
+        <Loader className="w-4 h-4 animate-spin" />
+      ) : (
+        <Minus className="w-4 h-4" />
+      )}
+    </Button>
+  );
+}
+
+const CartTable = ({ cart }: { cart?: Cart }) => {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   return (
@@ -63,66 +122,21 @@ export default function CartTable({ cart }: { cart: Cart }) {
                       </Link>
                     </TableCell>
                     <TableCell className="flex-center gap-2">
-                      <Button
-                        disabled={isPending}
-                        variant="outline"
-                        type="button"
-                        onClick={() =>
-                          startTransition(async () => {
-                            const res = await removeItemFromCart(
-                              item.productId
-                            );
-                            if (!res.success) {
-                              toast({
-                                variant: "destructive",
-                                description: res.message,
-                              });
-                            }
-                          })
-                        }
-                      >
-                        {isPending ? (
-                          <Loader className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Minus className="w-4 h-4" />
-                        )}
-                      </Button>
+                      <RemoveButton item={item} />
                       <span>{item.qty}</span>
-                      <Button
-                        disabled={isPending}
-                        variant="outline"
-                        type="button"
-                        onClick={() =>
-                          startTransition(async () => {
-                            const res = await addItemToCart(item);
-                            if (!res.success) {
-                              toast({
-                                variant: "destructive",
-                                description: res.message,
-                              });
-                            }
-                          })
-                        }
-                      >
-                        {isPending ? (
-                          <Loader className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Plus className="w-4 h-4" />
-                        )}
-                      </Button>
+                      <AddButton item={item} />
                     </TableCell>
-                    <TableCell className="text-right">
-                      {formatCurrency(Number(item.qty) * Number(item.price))}
-                    </TableCell>
+                    <TableCell className="text-right">${item.price}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </div>
+
           <Card>
             <CardContent className="p-4 gap-4">
               <div className="pb-3 text-xl">
-                Subtotal ({cart.items.reduce((a, c) => a + c.qty, 0)}):{" "}
+                Subtotal ({cart.items.reduce((a, c) => a + c.qty, 0)}):
                 <span className="font-bold">
                   {formatCurrency(cart.itemsPrice)}
                 </span>
@@ -147,4 +161,6 @@ export default function CartTable({ cart }: { cart: Cart }) {
       )}
     </>
   );
-}
+};
+
+export default CartTable;
